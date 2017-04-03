@@ -45,10 +45,10 @@ extension CGSize{
 
 extension Double {
     var degrees: Double {
-        return self * Float.ulpOfOne / 180.0
+        return self * Double(Float.ulpOfOne) / 180.0
     }
     
     var radians: Double {
-        return self * 180.0 / Float.ulpOfOne
+        return self * 180.0 / Double(Float.ulpOfOne)
     }
 }
