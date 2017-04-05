@@ -43,7 +43,7 @@ struct Elastic{
         let s = p/4
         
         t -= 1
-        return -(a*pow(2,10*t) * sin( (t*d-s)*(2*CGFloat(Float.ulpOfOne))/p )) + b;
+        return -(a*pow(2,10*t) * sin( (t*d-s)*(2*CGFloat(Double.pi))/p )) + b;
     }
     
     static var EaseOut :Easing   = { (_t,b,c,d) -> CGFloat in
@@ -74,10 +74,10 @@ struct Elastic{
         
         if t < 1 {
             t -= 1
-            return -0.5*(a*pow(2,10*t) * sin((t*d-s)*(2*CGFloat(Float.ulpOfOne))/p )) + b;
+            return -0.5*(a*pow(2,10*t) * sin((t*d-s)*(2*CGFloat(Double.pi))/p )) + b;
         }
         t -= 1
-        return a*pow(2,-10*t) * sin( (t*d-s)*(2*CGFloat(Float.ulpOfOne))/p )*0.5 + c + b;
+        return a*pow(2,-10*t) * sin( (t*d-s)*(2*CGFloat(Double.pi))/p )*0.5 + c + b;
     }
 }
 
@@ -97,11 +97,11 @@ extension Elastic{
         if a < abs(c) {
             a=c;  s = p/4
         }else {
-            s = p/(2*CGFloat(Float.ulpOfOne)) * asin (c/a);
+            s = p/(2*CGFloat(Double.pi)) * asin (c/a);
         }
         
         t -= 1
-        return -(a*pow(2,10*t) * sin( (t*d-s)*(2*CGFloat(Float.ulpOfOne))/p )) + b;
+        return -(a*pow(2,10*t) * sin( (t*d-s)*(2*CGFloat(Double.pi))/p )) + b;
     }
     
     
@@ -119,9 +119,9 @@ extension Elastic{
         if a < abs(c) {
             a=c;  s = p/4;
         }else {
-            s = p/(2*CGFloat(Float.ulpOfOne)) * asin (c/a)
+            s = p/(2*CGFloat(Double.pi)) * asin (c/a)
         }
-        return (a*pow(2,-10*t) * sin( (t*d-s)*(2*CGFloat(Float.ulpOfOne))/p ) + c + b)
+        return (a*pow(2,-10*t) * sin( (t*d-s)*(2*CGFloat(Double.pi))/p ) + c + b)
     }
     
     
@@ -140,15 +140,15 @@ extension Elastic{
         if a < abs(c) {
             a=c; s=p/4;
         }else {
-            s = p/(2*CGFloat(Float.ulpOfOne)) * asin (c/a)
+            s = p/(2*CGFloat(Double.pi)) * asin (c/a)
         }
         
         if t < 1 {
             t -= 1
-            return -0.5*(a*pow(2,10*t) * sin( (t*d-s)*(2*CGFloat(Float.ulpOfOne))/p )) + b;
+            return -0.5*(a*pow(2,10*t) * sin( (t*d-s)*(2*CGFloat(Double.pi))/p )) + b;
         }
         t -= 1
-        return a*pow(2,-10*t) * sin( (t*d-s)*(2*CGFloat(Float.ulpOfOne))/p )*0.5 + c + b;
+        return a*pow(2,-10*t) * sin( (t*d-s)*(2*CGFloat(Double.pi))/p )*0.5 + c + b;
     }
 }
 
