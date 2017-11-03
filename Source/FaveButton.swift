@@ -24,8 +24,6 @@
 
 import UIKit
 
-
-
 public typealias DotColors = (first: UIColor, second: UIColor)
 
 public protocol FaveButtonDelegate{
@@ -44,7 +42,7 @@ open class FaveButton: UIButton {
     
     fileprivate struct Const{
         static let duration             = 1.0
-        static let expandDuration       = 0.1298 
+        static let expandDuration       = 0.1298
         static let collapseDuration     = 0.1089
         static let faveIconShowDelay    = Const.expandDuration + Const.collapseDuration/2.0
         static let dotRadiusFactors     = (first: 0.0633, second: 0.04)
@@ -63,10 +61,14 @@ open class FaveButton: UIButton {
     
     fileprivate var faveIconImage:UIImage?
     fileprivate var faveIcon: FaveIcon!
-    
+    fileprivate var animationsEnabled = true
     
     override open var isSelected: Bool{
         didSet{
+            guard self.animationsEnabled else {
+                return
+            }
+            
             animateSelect(self.isSelected, duration: Const.duration)
         }
     }
@@ -89,6 +91,22 @@ open class FaveButton: UIButton {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         applyInit()
+    }
+    
+    public func setSelected(selected: Bool, animated: Bool) {
+        guard selected != self.isSelected else {
+            return
+        }
+        guard animated == false else {
+            self.isSelected = selected
+            return
+        }
+        
+        self.animationsEnabled = false
+        self.isSelected = selected
+        self.animationsEnabled = true
+        
+        animateSelect(self.isSelected, duration: 0.0) // trigger state change without animation
     }
 }
 
@@ -157,12 +175,12 @@ extension FaveButton{
 
 
 // MARK: actions
-extension FaveButton{
+extension FaveButton {
     func addActions(){
         self.addTarget(self, action: #selector(toggle(_:)), for: .touchUpInside)
     }
     
-    @objc func toggle(_ sender: FaveButton){
+   @objc func toggle(_ sender: FaveButton){
         sender.isSelected = !sender.isSelected
         
         guard case let delegate as FaveButtonDelegate = self.delegate else{
@@ -182,7 +200,11 @@ extension FaveButton{
     fileprivate func animateSelect(_ isSelected: Bool, duration: Double){
         let color  = isSelected ? selectedColor : normalColor
         
-        faveIcon.animateSelect(isSelected, fillColor: color, duration: duration, delay: Const.faveIconShowDelay)
+        faveIcon.animateSelect(isSelected, fillColor: color, duration: duration, delay: duration > 0.0 ? Const.faveIconShowDelay : 0.0)
+        
+        guard duration > 0.0 else {
+            return
+        }
         
         if isSelected{
             let radius           = bounds.size.scaleBy(1.3).width/2 // ring radius
@@ -194,7 +216,7 @@ extension FaveButton{
             
             ring.animateToRadius(radius, toColor: circleToColor, duration: Const.expandDuration, delay: 0)
             ring.animateColapse(radius, duration: Const.collapseDuration, delay: Const.expandDuration)
-
+            
             sparks.forEach{
                 $0.animateIgniteShow(igniteToRadius, duration:0.4, delay: Const.collapseDuration/3.0)
                 $0.animateIgniteHide(0.7, delay: 0.2)
@@ -202,20 +224,3 @@ extension FaveButton{
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
